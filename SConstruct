@@ -53,23 +53,13 @@ tools = {
 # COMMON COMPILATION FLAGS
 #
 common_flags = [
-  '-Wall', 
-  '-Wextra', 
-  '-Werror',
-  '-Wa,-adhlns=\'${TARGET}.lst\'', 
-  '-fmessage-length=0',
-  '-funsigned-bitfields'#,
-#  '-nostartfiles'
+    '-g',
+    '-Wall', 
+    '-Wextra', 
+    '-Werror',
+    '-fmessage-length=0',
+    '-funsigned-bitfields'
 ]
-
-#
-# FLAGS FOR DEBUG AND RELEASE VARIANTS
-#
-dbg_flags = {
-  True  : [ '-O0', '-g3'   ], # debug flags
-  False : [ '-O2', '-flto' ], # release flags
-}
-
 
 #
 # ASFLAGS
@@ -78,11 +68,11 @@ asflags   = ['-x', 'assembler-with-cpp']
 #
 # CFLAGS
 #
-cflags    = []
+cflags    = ['-std=c99']
 #
 # CXXFLAGS
 #
-cxxflags  = ['-std=c++11', '-fno-exceptions', '-fno-rtti']
+cxxflags  = ['-std=c++98', '-fno-exceptions', '-fno-rtti']
 #
 # LINKFLAGS
 #
@@ -99,18 +89,34 @@ kwargs.update( ASFLAGS   = common_flags + asflags,
 
 env = Environment(ENV = os.environ, **kwargs)
 
+mcu_targets = [
 
-# Compiling StdPeriph for STM32F10x family
+    # STM32F10x
+    'STM32F10X_CL',
+    'STM32F10X_LD',
+    'STM32F10X_MD',
+    'STM32F10X_HD',
+    'STM32F10X_XL',
+    'STM32F10X_LD_VL',
+    'STM32F10X_MD_VL',
+    'STM32F10X_HD_VL',
 
+    # STM32F4xx
+    'STM32F4XX',
+    'STM32F40XX',
+    'STM32F427X',
+]
 
-for mcu_line in [ 'CL', 'LD', 'MD', 'HD', 'XL', 'LD-VL', 'MD-VL', 'HD-VL']:
-    overrides = {
-        'MCU_FAMILY'    : 'STM32F10X',
-        'MCU_LINE'      : mcu_line,
-    }
+#
+# Compile StdPeriph for each STM32Fxxx target
+#
+for mcu_target in mcu_targets:
+    options = { 'MCU_TARGET' : mcu_target }
     lib = SConscript( 'ST/StdPeriph/SConscript', 
-                      variant_dir='build/ST/%s' % mcu_line,
-                      duplicate=0, exports=['env', 'overrides'])
+                      variant_dir='build/ST/%s' % mcu_target,
+                      duplicate=0,
+                      exports=['env', 'options'] )
+
 
 # Local Variables:
 # # tab-width:4
