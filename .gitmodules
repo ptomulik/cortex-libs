@@ -1,0 +1,6 @@
+[submodule "ST/StdPeriph"]
+	path = ST/StdPeriph
+	url = git@github.com:ptomulik/stm32-stdperiph.git
+[submodule "CMSIS"]
+	path = CMSIS
+	url = git@github.com:ptomulik/cortex-cmsis
