@@ -48,7 +48,6 @@ tools = {
   'STRIP'       : 'arm-none-eabi-strip',
 }
 
-
 #
 # COMMON COMPILATION FLAGS
 #
@@ -68,11 +67,11 @@ asflags   = ['-x', 'assembler-with-cpp']
 #
 # CFLAGS
 #
-cflags    = ['-std=c99']
+cflags    = []
 #
 # CXXFLAGS
 #
-cxxflags  = ['-std=c++98', '-fno-exceptions', '-fno-rtti']
+cxxflags  = ['-fno-exceptions', '-fno-rtti']
 #
 # LINKFLAGS
 #
@@ -111,12 +110,43 @@ mcu_targets = [
 # Compile StdPeriph for each STM32Fxxx target
 #
 for mcu_target in mcu_targets:
-    options = { 'MCU_TARGET' : mcu_target }
-    lib = SConscript( 'ST/StdPeriph/SConscript', 
-                      variant_dir='build/ST/%s' % mcu_target,
-                      duplicate=0,
-                      exports=['env', 'options'] )
+    options = { 
+      'MCU_TARGET'        : mcu_target,
+      'CMSIS_BASEDIR'     : env.Dir('.'),
+    }
+    lib = env.SConscript( 'ST/StdPeriph/SConscript', 
+        variant_dir='build/ST/%s' % mcu_target,
+        duplicate=0, exports=['env', 'options'] )
 
+#
+# Compile stm32++ for each STM32Fxxx target
+#
+for mcu_target in mcu_targets:
+    options = { 
+      'MCU_TARGET'        : mcu_target,
+      'CMSIS_BASEDIR'     : env.Dir('.'),
+      'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
+    }
+    lib = env.SConscript( 'ptomulik/stm32xx/SConscript', 
+        variant_dir='build/stm32xx/%s' % mcu_target,
+        duplicate=0, exports=['env', 'options'] )
+
+#
+# Compile unit tests for stm32++
+#
+for mcu_target in mcu_targets:
+    options = { 
+      'MCU_TARGET'        : mcu_target,
+      'CMSIS_BASEDIR'     : env.Dir('.'),
+      'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
+      'SCONSCRIPT_TARGET' : 'unit-test'
+    }
+    target = env.SConscript( 'ptomulik/stm32xx/SConscript', 
+        variant_dir='build/test/unit/stm32xx/%s' % mcu_target,
+        duplicate=0, exports=['env', 'options'] )
+env.Ignore('build/test', 'build/test/unit')
+env.Clean('build/test', 'build/test/unit')
+env.Alias('unit-test', 'build/test/unit')
 
 # Local Variables:
 # # tab-width:4

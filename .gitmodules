@@ -4,3 +4,6 @@
 [submodule "CMSIS"]
 	path = CMSIS
 	url = git@github.com:ptomulik/cortex-cmsis
+[submodule "ptomulik/stm32xx"]
+	path = ptomulik/stm32xx
+	url = git@github.com:ptomulik/stm32xx.git
