@@ -32,35 +32,41 @@ Three steps are necessary to bootstrap complete source tree:
 Compiling
 ---------
 
+Building Libraries
+^^^^^^^^^^^^^^^^^^
+
 Just type::
 
     scons
 
-All the stuff goes to ``build`` directory.
+to generate all libraries. All the stuff goes to ``build`` directory.
 
 What gets built
-^^^^^^^^^^^^^^^
+```````````````
 
 Currently we build the following stuff:
 
-+-----------------------+--------------------------------------------------+
-|      Module           |                       Info                       |
-+=======================+==================================================+
-| ST/StdPeriph          | The following targets are built:                 |
-|                       |                                                  |
-|                       | - STM32F10x_CL,                                  |
-|                       |   STM32F10x_HD,                                  |
-|                       |   STM32F10x_HD_VL,                               |
-|                       |   STM32F10x_LD,                                  |
-|                       |   STM32F10x_LD_VL,                               |
-|                       |   STM32F10x_MD,                                  |
-|                       |   STM32F10x_MD_VL,                               |
-|                       |   STM32F10x_XL.                                  |
-|                       |                                                  |
-|                       | - STM32F4xx,                                     |
-|                       |   STM32F40xx,                                    |
-|                       |   STM32F427x.                                    |
-+-----------------------+--------------------------------------------------+
++-----------------------+-----------------------------------------------------+
+|      Module           |                       Info                          |
++=======================+=====================================================+
+| `ST/StdPeriph`_       | StdPeriph library for STM32 MCUs.                   |
++-----------------------+-----------------------------------------------------+
+| `ptomulik/stm32xx`_   | C++ library for STM32 software developers.          |
++-----------------------+-----------------------------------------------------+
+
+The libraries are built for the following target MCUs:
+
+- STM32F10x_CL, STM32F10x_HD, STM32F10x_HD_VL, STM32F10x_LD, STM32F10x_LD_VL,
+  STM32F10x_MD, STM32F10x_MD_VL, STM32F10x_XL
+- STM32F4xx, STM32F40xx, STM32F427x.
+
+Builing Unit Test Runners
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some libraries come with unit tests, to build them type::
+
+    scons unit-test
+
 
 LICENSE
 -------
@@ -74,7 +80,7 @@ consists of:
 - this ``README.rst``, and 
 - the top level ``SConstruct`` file.
 
-Other files, if present, may be subject to separate license terms and ma be
+Other files, if present, may be subject to separate license terms and may be
 copyrighted by other parties.
 
 LICENSE
@@ -100,5 +106,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE
 
-.. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->
+.. _ST/StdPeriph: https://github.com/ptomulik/stm32-stdperiph
+.. _ptomulik/stm32xx: https://github.com/ptomulik/stm32xx
 
+.. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->
