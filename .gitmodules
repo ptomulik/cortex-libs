@@ -7,3 +7,6 @@
 [submodule "ptomulik/stm32xx"]
 	path = ptomulik/stm32xx
 	url = git@github.com:ptomulik/stm32xx.git
+[submodule "ptomulik/stm32-startup"]
+	path = ptomulik/stm32-startup
+	url = git@github.com:ptomulik/stm32-startup.git

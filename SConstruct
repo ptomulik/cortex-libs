@@ -1,16 +1,16 @@
 #
 # Copyright (c) 2013 by Pawel Tomulik
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,30 +22,30 @@
 import os
 
 tools = {
-  'ADDR2LINE'   : 'arm-none-eabi-addr2line',
-  'AR'          : 'arm-none-eabi-ar',
-  'AS'          : 'arm-none-eabi-gcc',
-  'CXXFILT'     : 'arm-none-eabi-c++filt',
-  'CPP'         : 'arm-none-eabi-cpp',
-  'CS'          : 'arm-none-eabi-cs',
-  'ELFEDIT'     : 'arm-none-eabi-elfedit',
-  'CXX'         : 'arm-none-eabi-g++',
-  'CC'          : 'arm-none-eabi-gcc',
-  'GCC_AR'      : 'arm-none-eabi-gcc-ar',
-  'GCC_NM'      : 'arm-none-eabi-gcc-nm',
-  'GCC_RANLIB'  : 'arm-none-eabi-gcc-ranlib',
-  'GCOV'        : 'arm-none-eabi-gcov',
-  'GDB'         : 'arm-none-eabi-gdb',
-  'GPROF'       : 'arm-none-eabi-gprof',
-  'LINK'        : 'arm-none-eabi-ld',
-  'NM'          : 'arm-none-eabi-nm',
-  'OBJCOPY'     : 'arm-none-eabi-objcopy',
-  'OBJDUMP'     : 'arm-none-eabi-objdump',
-  'RANLIB'      : 'arm-none-eabi-ranlib',
-  'READELF'     : 'arm-none-eabi-readelf',
-  'SIZE'        : 'arm-none-eabi-size',
-  'STRINGS'     : 'arm-none-eabi-strings',
-  'STRIP'       : 'arm-none-eabi-strip',
+    'ADDR2LINE'   : 'arm-none-eabi-addr2line',
+    'AR'          : 'arm-none-eabi-ar',
+    'AS'          : 'arm-none-eabi-gcc',
+    'CXXFILT'     : 'arm-none-eabi-c++filt',
+    'CPP'         : 'arm-none-eabi-cpp',
+    'CS'          : 'arm-none-eabi-cs',
+    'ELFEDIT'     : 'arm-none-eabi-elfedit',
+    'CXX'         : 'arm-none-eabi-g++',
+    'CC'          : 'arm-none-eabi-gcc',
+    'GCC_AR'      : 'arm-none-eabi-gcc-ar',
+    'GCC_NM'      : 'arm-none-eabi-gcc-nm',
+    'GCC_RANLIB'  : 'arm-none-eabi-gcc-ranlib',
+    'GCOV'        : 'arm-none-eabi-gcov',
+    'GDB'         : 'arm-none-eabi-gdb',
+    'GPROF'       : 'arm-none-eabi-gprof',
+    'LINK'        : 'arm-none-eabi-ld',
+    'NM'          : 'arm-none-eabi-nm',
+    'OBJCOPY'     : 'arm-none-eabi-objcopy',
+    'OBJDUMP'     : 'arm-none-eabi-objdump',
+    'RANLIB'      : 'arm-none-eabi-ranlib',
+    'READELF'     : 'arm-none-eabi-readelf',
+    'SIZE'        : 'arm-none-eabi-size',
+    'STRINGS'     : 'arm-none-eabi-strings',
+    'STRIP'       : 'arm-none-eabi-strip',
 }
 
 #
@@ -53,8 +53,8 @@ tools = {
 #
 common_flags = [
     '-g',
-    '-Wall', 
-    '-Wextra', 
+    '-Wall',
+    '-Wextra',
     '-Werror',
     '-fmessage-length=0',
     '-funsigned-bitfields'
@@ -86,7 +86,7 @@ kwargs.update( ASFLAGS   = common_flags + asflags,
                CXXFLAGS  = common_flags + cxxflags,
                LINKFLAGS = common_flags + linkflags )
 
-env = Environment(ENV = os.environ, **kwargs)
+env = Environment(ENV = os.environ, tools = ['default', 'textfile'], **kwargs)
 
 mcu_targets = [
 
@@ -106,47 +106,78 @@ mcu_targets = [
 #    'STM32F427X',
 ]
 
+mcu_models = [
+    # STM32F10x LD performance line
+    'STM32F103X4',
+    'STM32F103X6',
+    # STM32F10x MD performance line
+    'STM32F103X8',
+    'STM32F103XB',
+    # STM32F10x HD performance line
+    'STM32F103XC',
+    'STM32F103XD',
+    'STM32F103XE',
+    # STM32F10x XL performance line
+    'STM32F103XF',
+    'STM32F103XG',
+    # STM23F10x connectivity line
+    'STM32F105X8',
+    'STM32F105XB',
+    'STM32F105XC',
+    'STM32F107X8',
+    'STM32F107XB',
+    'STM32F107XC',
+]
+
 #
 # Compile StdPeriph for each STM32Fxxx target
 #
 for mcu_target in mcu_targets:
-    options = { 
+    options = {
       'MCU_TARGET'        : mcu_target,
       'CMSIS_BASEDIR'     : env.Dir('.'),
     }
-    lib = env.SConscript( 'ST/StdPeriph/SConscript', 
-        variant_dir='build/ST/%s' % mcu_target,
+    lib = env.SConscript( 'ST/StdPeriph/SConscript',
+        variant_dir='build/ST/%s' % mcu_target.lower(),
         duplicate=0, exports=['env', 'options'] )
 
 #
 # Compile stm32++ for each STM32Fxxx target
 #
 for mcu_target in mcu_targets:
-    options = { 
-      'MCU_TARGET'        : mcu_target,
-      'CMSIS_BASEDIR'     : env.Dir('.'),
-      'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
+    options = {
+        'MCU_TARGET'        : mcu_target,
+        'CMSIS_BASEDIR'     : env.Dir('.'),
+        'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
     }
-    lib = env.SConscript( 'ptomulik/stm32xx/SConscript', 
-        variant_dir='build/stm32xx/%s' % mcu_target,
+    lib = env.SConscript( 'ptomulik/stm32xx/SConscript',
+        variant_dir='build/stm32xx/%s' % mcu_target.lower(),
         duplicate=0, exports=['env', 'options'] )
 
 #
 # Compile unit tests for stm32++
 #
 for mcu_target in mcu_targets:
-    options = { 
-      'MCU_TARGET'        : mcu_target,
-      'CMSIS_BASEDIR'     : env.Dir('.'),
-      'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
-      'SCONSCRIPT_TARGET' : 'unit-test'
+    options = {
+        'MCU_TARGET'        : mcu_target,
+        'CMSIS_BASEDIR'     : env.Dir('.'),
+        'STDPERIPH_BASEDIR' : env.Dir('ST/StdPeriph'),
+        'SCONSCRIPT_TARGET' : 'unit-test'
     }
-    target = env.SConscript( 'ptomulik/stm32xx/SConscript', 
-        variant_dir='build/test/unit/stm32xx/%s' % mcu_target,
+    target = env.SConscript( 'ptomulik/stm32xx/SConscript',
+        variant_dir='build/test/unit/stm32xx/%s' % mcu_target.lower(),
         duplicate=0, exports=['env', 'options'] )
 env.Ignore('build/test', 'build/test/unit')
 env.Clean('build/test', 'build/test/unit')
 env.Alias('unit-test', 'build/test/unit')
+
+for mcu_target in mcu_models:
+    options = {
+      'MCU_TARGET'        : mcu_target,
+    }
+    target = env.SConscript( 'ptomulik/stm32-startup/SConscript',
+        variant_dir='build/stm32-startup/%s' % mcu_target.lower(),
+        duplicate=0, exports=['env','options'] )
 
 # Local Variables:
 # # tab-width:4
