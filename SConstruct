@@ -87,6 +87,7 @@ kwargs.update( ASFLAGS   = common_flags + asflags,
                LINKFLAGS = common_flags + linkflags )
 
 env = Environment(ENV = os.environ, tools = ['default', 'textfile'], **kwargs)
+env.Tool('cxxtest', CXXTEST_INSTALL_DIR = '#CxxTest/cxxtest')
 
 mcu_targets = [
 

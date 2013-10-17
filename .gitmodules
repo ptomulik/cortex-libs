@@ -10,3 +10,6 @@
 [submodule "ptomulik/stm32-startup"]
 	path = ptomulik/stm32-startup
 	url = git@github.com:ptomulik/stm32-startup.git
+[submodule "CxxTest/cxxtest"]
+	path = CxxTest/cxxtest
+	url = git@github.com:CxxTest/cxxtest.git
